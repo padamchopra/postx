@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PostX</string>
+    <string name="new_post">New Post</string>
+</resources>

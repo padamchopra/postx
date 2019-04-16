@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="20dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/home_title"
+        android:layout_width="match_parent"
+
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/productsans_bold"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="46sp" />
+
+    <TextView
+        android:id="@+id/home_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/home_title"
+        android:fontFamily="@font/productsans"
+        android:text="Welcome back."
+        android:textColor="@color/black"
+        android:textSize="24sp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/vendors_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
+        android:elevation="10dp"
+        android:onClick="createPost"
+        android:src="@drawable/add_icon"
+        app:backgroundTint="@color/greenmat" />
+
+    <RelativeLayout
+        android:id="@+id/main_small_rellayout"
+        android:layout_width="5dp"
+        android:layout_height="5dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="55dp"
+        android:background="@color/greenmat"
+        android:layout_marginBottom="56dp"
+        android:transitionName="BackgroundOpen">
+
+    </RelativeLayout>
+
+</RelativeLayout>
