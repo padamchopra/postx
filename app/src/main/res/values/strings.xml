@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">PostX</string>
     <string name="new_post">New Post</string>
+    <string name="apply">Apply</string>
+    <string name="cancel">Cancel</string>
 </resources>

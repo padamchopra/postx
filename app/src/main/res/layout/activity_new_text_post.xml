@@ -5,8 +5,7 @@
     android:id="@+id/new_post_root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:backgroundTint="@color/greenmat"
+    android:background="@color/greenmat"
     android:orientation="vertical"
     android:padding="15dp"
     android:transitionName="BackgroundOpen"
@@ -32,314 +31,356 @@
         app:cardElevation="5dp"
         app:cardUseCompatPadding="true">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:orientation="vertical">
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="74dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/productsans"
-                    android:text="Background:"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <android.support.design.button.MaterialButton
-                    android:layout_width="50dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
-                    app:backgroundTint="@color/greenmat"
-                    app:cornerRadius="5dp" />
-            </RelativeLayout>
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:orientation="vertical">
 
-                <TextView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/productsans"
-                    android:text="Text:"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:layout_height="wrap_content">
 
-                <android.support.design.button.MaterialButton
-                    android:layout_width="50dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
-                    app:backgroundTint="@color/black"
-                    app:cornerRadius="5dp" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="10dp"
-                android:background="@android:color/darker_gray" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/productsans"
-                    android:text="Heading:"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <Switch
-                    android:id="@+id/text_post_heading_switch"
-                    android:layout_width="50dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
-                    android:theme="@style/SCBSwitch" />
-            </RelativeLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/text_post_heading_etl"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="7dp"
-                android:layout_marginEnd="7dp"
-                android:background="@color/white"
-                android:textColorHint="@color/almostBlack"
-                android:visibility="gone"
-                app:hintTextAppearance="@style/TextAppearance.AppCompat.Caption">
-
-                <android.support.design.widget.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="0dp"
-                    android:fontFamily="@font/productsans"
-                    android:hint="Type here"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:paddingStart="7dp"
-                    android:paddingTop="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="10dp"
-                    android:textSize="16sp" />
-            </android.support.design.widget.TextInputLayout>
-
-            <RelativeLayout
-                android:id="@+id/text_post_heading_alignment_layout"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="12dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginTop="13dp"
-                    android:fontFamily="@font/productsans"
-                    android:text="Alignment:"
-                    android:textColor="@color/black"
-                    android:textSize="18sp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_alignParentEnd="true">
-
-                    <Button
-                        android:id="@+id/text_post_heading_al_1"
-                        android:layout_width="40dp"
-                        android:layout_height="match_parent"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="4dp"
                         android:fontFamily="@font/productsans"
-                        android:text="L"
-                        android:textColor="@color/black" />
-                    <Button
-                        android:id="@+id/text_post_heading_al_2"
-                        android:layout_width="40dp"
-                        android:layout_marginStart="7dp"
-                        android:layout_marginEnd="7dp"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/productsans"
-                        android:text="C"
-                        android:textColor="@color/black" />
-                    <Button
-                        android:id="@+id/text_post_heading_al_3"
-                        android:layout_width="40dp"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/productsans"
-                        android:text="R"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-            </RelativeLayout>
+                        android:text="Background Image:"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                    <Switch
+                        android:id="@+id/text_post_bgimage_switch"
+                        android:layout_width="50dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
+                        android:theme="@style/SCBSwitch" />
+                </RelativeLayout>
 
-                <TextView
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginTop="9dp"
-                    android:fontFamily="@font/productsans"
-                    android:text="Content:"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:layout_marginTop="20dp">
 
-                <ImageButton
-                    android:layout_width="50dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/productsans"
+                        android:text="Background:"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <android.support.design.button.MaterialButton
+                        android:id="@+id/text_post_background_color_picker_button"
+                        android:layout_width="50dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
+                        app:backgroundTint="@color/greenmat"
+                        app:cornerRadius="5dp" />
+
+                    <ImageButton
+                        android:id="@+id/text_post_background_image_button"
+                        android:layout_width="50dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
+                        android:background="@color/white"
+                        android:onClick="selectImage"
+                        android:src="@drawable/imagepick_icon"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/productsans"
+                        android:text="Text:"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <android.support.design.button.MaterialButton
+                        android:id="@+id/text_post_text_color_picker_button"
+                        android:layout_width="50dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
+                        app:backgroundTint="@color/black"
+                        app:cornerRadius="5dp" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="50dp"
+                    android:background="@android:color/darker_gray" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="7dp"
+                        android:fontFamily="@font/productsans"
+                        android:text="Heading:"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <Switch
+                        android:id="@+id/text_post_heading_switch"
+                        android:layout_width="50dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
+                        android:theme="@style/SCBSwitch" />
+                </RelativeLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_post_heading_etl"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginEnd="7dp"
                     android:background="@color/white"
-                    android:src="@drawable/edit_icon" />
-            </RelativeLayout>
+                    android:textColorHint="@color/almostBlack"
+                    android:visibility="gone"
+                    app:hintTextAppearance="@style/TextAppearance.AppCompat.Caption">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:fontFamily="@font/productsans"
-                    android:layout_marginTop="13dp"
-                    android:text="Alignment:"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="50dp"
-                    android:layout_alignParentEnd="true">
-
-                    <Button
-                        android:id="@+id/text_post_content_al_1"
-                        android:layout_width="40dp"
-                        android:layout_height="match_parent"
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
                         android:fontFamily="@font/productsans"
-                        android:text="L"
-                        android:textColor="@color/black" />
-                    <Button
-                        android:id="@+id/text_post_content_al_2"
-                        android:layout_width="40dp"
-                        android:layout_marginStart="7dp"
-                        android:layout_marginEnd="7dp"
-                        android:layout_height="match_parent"
+                        android:hint="Type here"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingStart="7dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="10dp"
+                        android:textSize="18sp" />
+                </android.support.design.widget.TextInputLayout>
+
+                <RelativeLayout
+                    android:id="@+id/text_post_heading_alignment_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="12dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="13dp"
                         android:fontFamily="@font/productsans"
-                        android:text="C"
-                        android:textColor="@color/black" />
-                    <Button
-                        android:id="@+id/text_post_content_al_3"
-                        android:layout_width="40dp"
-                        android:layout_height="match_parent"
+                        android:text="Alignment:"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true">
+
+                        <Button
+                            android:id="@+id/text_post_heading_al_1"
+                            android:layout_width="40dp"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/productsans"
+                            android:text="L"
+                            android:textColor="@color/black" />
+
+                        <Button
+                            android:id="@+id/text_post_heading_al_2"
+                            android:layout_width="40dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="7dp"
+                            android:layout_marginEnd="7dp"
+                            android:fontFamily="@font/productsans"
+                            android:text="C"
+                            android:textColor="@color/black" />
+
+                        <Button
+                            android:id="@+id/text_post_heading_al_3"
+                            android:layout_width="40dp"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/productsans"
+                            android:text="R"
+                            android:textColor="@color/black" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="9dp"
                         android:fontFamily="@font/productsans"
-                        android:text="R"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-            </RelativeLayout>
+                        android:text="Content:"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+                </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
-
-                <TextView
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_post_content_etl"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginTop="4dp"
-                    android:fontFamily="@font/productsans"
-                    android:text="By line:"
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
+                    android:layout_marginStart="7dp"
+                    android:layout_marginEnd="7dp"
+                    android:background="@color/white"
+                    android:textColorHint="@color/almostBlack"
+                    app:hintTextAppearance="@style/TextAppearance.AppCompat.Caption">
 
-                <Switch
-                    android:id="@+id/text_post_byline_switch"
-                    android:layout_width="50dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
-                    android:theme="@style/SCBSwitch" />
-            </RelativeLayout>
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:fontFamily="@font/productsans"
+                        android:hint="Type here"
+                        android:inputType="textMultiLine"
+                        android:maxLines="5"
+                        android:paddingStart="7dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="10dp"
+                        android:singleLine="false"
+                        android:textSize="18sp" />
+                </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/text_post_byline_etl"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="7dp"
-                android:layout_marginEnd="7dp"
-                android:background="@color/white"
-                android:textColorHint="@color/almostBlack"
-                android:visibility="gone"
-                app:hintTextAppearance="@style/TextAppearance.AppCompat.Caption">
-
-                <android.support.design.widget.TextInputEditText
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="0dp"
-                    android:fontFamily="@font/productsans"
-                    android:hint="Type here"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:paddingStart="7dp"
-                    android:paddingTop="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="10dp"
-                    android:textSize="16sp" />
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="12dp">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="13dp"
+                        android:fontFamily="@font/productsans"
+                        android:text="Alignment:"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
 
-            <!--<android.support.design.widget.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@color/white"
-                android:textColorHint="@color/almostBlack"
-                app:boxCornerRadiusBottomEnd="2dp"
-                app:boxCornerRadiusBottomStart="2dp"
-                app:boxCornerRadiusTopEnd="2dp"
-                app:boxCornerRadiusTopStart="2dp"
-                app:hintTextAppearance="@style/TextAppearance.AppCompat.Caption">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true">
 
-                <android.support.design.widget.TextInputEditText
+                        <Button
+                            android:id="@+id/text_post_content_al_1"
+                            android:layout_width="40dp"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/productsans"
+                            android:text="L"
+                            android:textColor="@color/black" />
+
+                        <Button
+                            android:id="@+id/text_post_content_al_2"
+                            android:layout_width="40dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="7dp"
+                            android:layout_marginEnd="7dp"
+                            android:fontFamily="@font/productsans"
+                            android:text="C"
+                            android:textColor="@color/black" />
+
+                        <Button
+                            android:id="@+id/text_post_content_al_3"
+                            android:layout_width="40dp"
+                            android:layout_height="match_parent"
+                            android:fontFamily="@font/productsans"
+                            android:text="R"
+                            android:textColor="@color/black" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="0dp"
-                    android:fontFamily="@font/productsans"
-                    android:hint="Content"
-                    android:inputType="text"
-                    android:maxLines="5"
-                    android:paddingStart="7dp"
-                    android:paddingTop="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="10dp"
-                    android:textSize="20sp" />
-            </android.support.design.widget.TextInputLayout>-->
-        </LinearLayout>
-        <!--TODO: Add three icons- delete, save, continue here-->
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="4dp"
+                        android:fontFamily="@font/productsans"
+                        android:text="By line:"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <Switch
+                        android:id="@+id/text_post_byline_switch"
+                        android:layout_width="50dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
+                        android:theme="@style/SCBSwitch" />
+                </RelativeLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/text_post_byline_etl"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginEnd="7dp"
+                    android:background="@color/white"
+                    android:textColorHint="@color/almostBlack"
+                    android:visibility="gone"
+                    app:hintTextAppearance="@style/TextAppearance.AppCompat.Caption">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:fontFamily="@font/productsans"
+                        android:hint="Type here"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingStart="7dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="10dp"
+                        android:textSize="18sp" />
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -352,6 +393,7 @@
                 android:layout_height="35dp"
                 android:layout_alignParentStart="true"
                 android:background="@color/white"
+                android:onClick="goBack"
                 android:scaleType="centerCrop"
                 android:src="@drawable/delete_icon" />
 

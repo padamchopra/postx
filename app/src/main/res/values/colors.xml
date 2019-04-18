@@ -10,4 +10,9 @@
     <color name="blue500">#29B6F6</color>
     <color name="greenmat">#8BC34A</color>
     <color name="almostBlack">#242528</color>
+    <color name="redMat">#F44336</color>
+    <color name="transparent">#00000000</color>
+    <color name="greenMat">#8BC34A</color>
+    <color name="blueMat">#2196F3</color>
+    <color name="blackish">#33000000</color>
 </resources>
