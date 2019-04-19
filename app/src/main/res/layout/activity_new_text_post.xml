@@ -16,6 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:focusedByDefault="true"
         android:fontFamily="@font/productsans_bold"
         android:text="@string/new_post"
         android:textAlignment="center"
@@ -69,7 +72,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="12dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -104,7 +107,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="12dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -112,7 +115,7 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginTop="4dp"
                         android:fontFamily="@font/productsans"
-                        android:text="Text:"
+                        android:text="Text Color:"
                         android:textColor="@color/black"
                         android:textSize="20sp" />
 
@@ -125,18 +128,18 @@
                         app:cornerRadius="5dp" />
                 </RelativeLayout>
 
-                <View
+                <!--<View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginStart="50dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="50dp"
-                    android:background="@android:color/darker_gray" />
+                    android:background="@android:color/darker_gray" />-->
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="12dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -169,6 +172,7 @@
                     app:hintTextAppearance="@style/TextAppearance.AppCompat.Caption">
 
                     <android.support.design.widget.TextInputEditText
+                        android:id="@+id/heading_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="0dp"
@@ -238,7 +242,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="12dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -263,6 +267,7 @@
                     app:hintTextAppearance="@style/TextAppearance.AppCompat.Caption">
 
                     <android.support.design.widget.TextInputEditText
+                        android:id="@+id/content_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="0dp"
@@ -331,7 +336,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="12dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -364,6 +369,7 @@
                     app:hintTextAppearance="@style/TextAppearance.AppCompat.Caption">
 
                     <android.support.design.widget.TextInputEditText
+                        android:id="@+id/byline_edit_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="0dp"
@@ -403,18 +409,19 @@
                 android:layout_height="35dp"
                 android:layout_alignParentEnd="true"
                 android:background="@color/white"
+                android:onClick="generateImage"
                 android:scaleType="centerCrop"
                 android:src="@drawable/arrow_forward_icon" />
 
 
-            <ImageButton
+            <!--<ImageButton
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_marginStart="20dp"
                 android:layout_toEndOf="@id/text_post_delete"
                 android:background="@color/white"
                 android:scaleType="centerCrop"
-                android:src="@drawable/new_bookmark_icon" />
+                android:src="@drawable/new_bookmark_icon" />-->
         </RelativeLayout>
     </android.support.design.card.MaterialCardView>
 </RelativeLayout>

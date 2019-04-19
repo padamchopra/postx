@@ -1,5 +1,6 @@
 package com.practikality.postx;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -8,31 +9,53 @@ import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.practikality.postx.models.TextPostDetails;
+
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 
 public class newTextPost extends AppCompatActivity {
 
@@ -44,15 +67,12 @@ public class newTextPost extends AppCompatActivity {
     public Button contental1;
     public Button contental2;
     public Button contental3;
-    public boolean imageAlreadySet;
-    public Uri mBackgroundImageUri;
-
-    public int headingAlignment;
-    public int textAlignment;
-
     public MaterialButton mBackgroundColorPicker;
     public MaterialButton mTextColorPicker;
     public ImageButton mBackgroundImagePicker;
+    public Switch bgImageSwitch;
+    public Switch headingSwitch;
+    public Switch bylineSwitch;
 
     public int mRedBG;
     public int mGreenBG;
@@ -63,6 +83,11 @@ public class newTextPost extends AppCompatActivity {
     public int redTemp;
     public int greenTemp;
     public int blueTemp;
+    public boolean imageAlreadySet;
+    public Uri mBackgroundImageUri;
+    public int headingAlignment;
+    public int textAlignment;
+    public Bitmap bitmapToShare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +95,17 @@ public class newTextPost extends AppCompatActivity {
         setContentView(R.layout.activity_new_text_post);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        //for writing into external storage
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
         //setting views
-        Switch headingSwitch = (Switch) findViewById(R.id.text_post_heading_switch);
+        headingSwitch = (Switch) findViewById(R.id.text_post_heading_switch);
         final TextInputLayout textInputLayoutHeading = (TextInputLayout) findViewById(R.id.text_post_heading_etl);
         final RelativeLayout relativeLayoutHeading = (RelativeLayout) findViewById(R.id.text_post_heading_alignment_layout);
-        Switch bylineSwitch = (Switch) findViewById(R.id.text_post_byline_switch);
+        bylineSwitch = (Switch) findViewById(R.id.text_post_byline_switch);
         final TextInputLayout textInputLayoutByLine = (TextInputLayout) findViewById(R.id.text_post_byline_etl);
-        Switch bgImageSwitch = (Switch) findViewById(R.id.text_post_bgimage_switch);
+        bgImageSwitch = (Switch) findViewById(R.id.text_post_bgimage_switch);
         headingal1 = (Button) findViewById(R.id.text_post_heading_al_1);
         headingal2 = (Button) findViewById(R.id.text_post_heading_al_2);
         headingal3 = (Button) findViewById(R.id.text_post_heading_al_3);
@@ -92,10 +121,10 @@ public class newTextPost extends AppCompatActivity {
         headingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     textInputLayoutHeading.setVisibility(View.VISIBLE);
                     relativeLayoutHeading.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     textInputLayoutHeading.setVisibility(View.GONE);
                     relativeLayoutHeading.setVisibility(View.GONE);
                 }
@@ -106,9 +135,9 @@ public class newTextPost extends AppCompatActivity {
         bylineSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     textInputLayoutByLine.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     textInputLayoutByLine.setVisibility(View.GONE);
                 }
             }
@@ -118,10 +147,10 @@ public class newTextPost extends AppCompatActivity {
         bgImageSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     mBackgroundColorPicker.setVisibility(View.GONE);
                     mBackgroundImagePicker.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     mBackgroundColorPicker.setVisibility(View.VISIBLE);
                     mBackgroundImagePicker.setVisibility(View.GONE);
                 }
@@ -197,57 +226,57 @@ public class newTextPost extends AppCompatActivity {
         });
 
         imageAlreadySet = false;
+        makeSnackbar("Saving templates, coming soon!");
     }
 
-    public void headingalignment(int buttonClicked){
-        switch (buttonClicked){
+    public void headingalignment(int buttonClicked) {
+        switch (buttonClicked) {
             case 1:
-                headingal1.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(mRedBG,mGreenBG,mBlueBG)));
-                headingal2.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207,207,207)));
-                headingal3.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207,207,207)));
+                headingal1.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(mRedBG, mGreenBG, mBlueBG)));
+                headingal2.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207, 207, 207)));
+                headingal3.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207, 207, 207)));
                 break;
             case 2:
-                headingal2.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(mRedBG,mGreenBG,mBlueBG)));
-                headingal1.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207,207,207)));
-                headingal3.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207,207,207)));
+                headingal2.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(mRedBG, mGreenBG, mBlueBG)));
+                headingal1.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207, 207, 207)));
+                headingal3.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207, 207, 207)));
                 break;
             case 3:
                 headingal3.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(mRedBG, mGreenBG, mBlueBG)));
-                headingal2.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207,207,207)));
-                headingal1.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207,207,207)));
+                headingal2.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207, 207, 207)));
+                headingal1.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207, 207, 207)));
                 break;
         }
         headingAlignment = buttonClicked;
     }
 
-    public void contentalignment(int buttonClicked){
-        switch (buttonClicked){
+    public void contentalignment(int buttonClicked) {
+        switch (buttonClicked) {
             case 1:
-                contental1.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(mRedBG,mGreenBG,mBlueBG)));
-                contental2.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207,207,207)));
-                contental3.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207,207,207)));
+                contental1.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(mRedBG, mGreenBG, mBlueBG)));
+                contental2.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207, 207, 207)));
+                contental3.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207, 207, 207)));
                 break;
             case 2:
-                contental2.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(mRedBG,mGreenBG,mBlueBG)));
-                contental1.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207,207,207)));
-                contental3.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207,207,207)));
+                contental2.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(mRedBG, mGreenBG, mBlueBG)));
+                contental1.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207, 207, 207)));
+                contental3.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207, 207, 207)));
                 break;
             case 3:
-                contental3.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(mRedBG,mGreenBG,mBlueBG)));
-                contental2.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207,207,207)));
-                contental1.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207,207,207)));
+                contental3.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(mRedBG, mGreenBG, mBlueBG)));
+                contental2.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207, 207, 207)));
+                contental1.setBackgroundTintList(ColorStateList.valueOf(Color.rgb(207, 207, 207)));
                 break;
         }
         textAlignment = buttonClicked;
     }
 
-
-    public void colorPicker(final int colorOf){
-        if(colorOf==1){
+    public void colorPicker(final int colorOf) {
+        if (colorOf == 1) {
             redTemp = mRedBG;
             greenTemp = mGreenBG;
             blueTemp = mBlueBG;
-        }else{
+        } else {
             redTemp = mRedT;
             greenTemp = mGreenT;
             blueTemp = mBlueT;
@@ -274,13 +303,13 @@ public class newTextPost extends AppCompatActivity {
         redSeekbar.setProgress(redTemp);
         greenSeekbar.setProgress(greenTemp);
         blueSeekbar.setProgress(blueTemp);
-        dialogColorPreview.setBackground(new ColorDrawable(Color.rgb(redTemp,greenTemp,blueTemp)));
+        dialogColorPreview.setBackground(new ColorDrawable(Color.rgb(redTemp, greenTemp, blueTemp)));
 
         redSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 redTemp = progress;
-                dialogColorPreview.setBackground(new ColorDrawable(Color.rgb(redTemp,greenTemp,blueTemp)));
+                dialogColorPreview.setBackground(new ColorDrawable(Color.rgb(redTemp, greenTemp, blueTemp)));
             }
 
             @Override
@@ -298,7 +327,7 @@ public class newTextPost extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 greenTemp = progress;
-                dialogColorPreview.setBackground(new ColorDrawable(Color.rgb(redTemp,greenTemp,blueTemp)));
+                dialogColorPreview.setBackground(new ColorDrawable(Color.rgb(redTemp, greenTemp, blueTemp)));
             }
 
             @Override
@@ -316,7 +345,7 @@ public class newTextPost extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 blueTemp = progress;
-                dialogColorPreview.setBackground(new ColorDrawable(Color.rgb(redTemp,greenTemp,blueTemp)));
+                dialogColorPreview.setBackground(new ColorDrawable(Color.rgb(redTemp, greenTemp, blueTemp)));
             }
 
             @Override
@@ -340,12 +369,12 @@ public class newTextPost extends AppCompatActivity {
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(colorOf==1){
+                if (colorOf == 1) {
                     mRedBG = redTemp;
                     mGreenBG = greenTemp;
                     mBlueBG = blueTemp;
                     refreshBackgroundColor();
-                }else {
+                } else {
                     mRedT = redTemp;
                     mGreenT = greenTemp;
                     mBlueT = blueTemp;
@@ -356,27 +385,27 @@ public class newTextPost extends AppCompatActivity {
         });
     }
 
-    public void refreshTextColor(){
+    public void refreshTextColor() {
         TextView title = (TextView) findViewById(R.id.new_post_title);
-        title.setTextColor(Color.rgb(mRedT,mGreenT,mBlueT));
-        findViewById(R.id.text_post_text_color_picker_button).setBackgroundTintList(ColorStateList.valueOf(Color.rgb(mRedT,mGreenT,mBlueT)));
+        title.setTextColor(Color.rgb(mRedT, mGreenT, mBlueT));
+        findViewById(R.id.text_post_text_color_picker_button).setBackgroundTintList(ColorStateList.valueOf(Color.rgb(mRedT, mGreenT, mBlueT)));
     }
 
-    public void refreshBackgroundColor(){
-        int ColorToSet = Color.rgb(mRedBG,mGreenBG,mBlueBG);
+    public void refreshBackgroundColor() {
+        int ColorToSet = Color.rgb(mRedBG, mGreenBG, mBlueBG);
         findViewById(R.id.new_post_root_view).setBackground(new ColorDrawable(ColorToSet));
         findViewById(R.id.text_post_background_color_picker_button).setBackgroundTintList(ColorStateList.valueOf(ColorToSet));
         headingalignment(headingAlignment);
         contentalignment(textAlignment);
     }
 
-    public void selectImage(View view){
-        if(!imageAlreadySet){
+    public void selectImage(View view) {
+        if (!imageAlreadySet) {
             startImageIntent();
         }
     }
 
-    public void startImageIntent(){
+    public void startImageIntent() {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, PICK_FROM_GALLERY);
@@ -385,14 +414,13 @@ public class newTextPost extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == Activity.RESULT_OK){
-            switch (requestCode){
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
                 case PICK_FROM_GALLERY:
-                    try{
+                    try {
                         Uri imageSelected = data.getData();
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), imageSelected);
-                        cropImage(bitmap);
-                    }catch (Exception e){
+                        mBackgroundImageUri = imageSelected;
+                    } catch (Exception e) {
                         makeSnackbar("Could not load image.");
                     }
                     /*TODO: Convert URI to bitmap
@@ -400,15 +428,75 @@ public class newTextPost extends AppCompatActivity {
                     text_post_image_background.setImageBitmap(bitmap);*/
                     break;
             }
-        }else{
+        } else {
             makeSnackbar("An error occured. Try again.");
         }
     }
 
-    public void cropImage(Bitmap imageToCrop){
+    public void generateImage(View view) {
+        boolean allOkay = true;
+        String errorMessage = "An error occured. Try again!";
+        TextPostDetails textPostDetails = new TextPostDetails();
+        if (bgImageSwitch.isChecked()) {
+            textPostDetails.setBackgroundImageUsed(true);
+            if (mBackgroundImageUri.toString().length() > 0) {
+                textPostDetails.setBackgroundImageUri(mBackgroundImageUri);
+            } else {
+                allOkay = false;
+                errorMessage = "Background image not set";
+            }
+        } else {
+            textPostDetails.setBackgroundImageUsed(false);
+            textPostDetails.setBackgroundColor(Color.rgb(mRedBG, mGreenBG, mBlueBG));
+        }
+        textPostDetails.setTextColor(Color.rgb(mRedT, mGreenT, mBlueT));
+        if (headingSwitch.isChecked()) {
+            textPostDetails.setHeadingUsed(true);
+            TextInputEditText headingInputEditText = findViewById(R.id.heading_edit_text);
+            String heading = String.valueOf(headingInputEditText.getText());
+            if (heading.length() > 0) {
+                textPostDetails.setHeading(heading);
+                textPostDetails.setHeadingAlignment(headingAlignment);
+            } else {
+                allOkay = false;
+                errorMessage = "Please enter a heading";
+            }
+        } else {
+            textPostDetails.setHeadingUsed(false);
+        }
+        TextInputEditText contentInputEditText = findViewById(R.id.content_edit_text);
+        String content = String.valueOf(contentInputEditText.getText());
+        if (content.length() > 0) {
+            textPostDetails.setContent(content);
+            textPostDetails.setContentAlignment(textAlignment);
+        } else {
+            allOkay = false;
+            errorMessage = "Please enter some content";
+        }
+        if (bylineSwitch.isChecked()) {
+            textPostDetails.setByLineUsed(true);
+            TextInputEditText bylineInputEditText = findViewById(R.id.byline_edit_text);
+            String byline = String.valueOf(bylineInputEditText.getText());
+            if (byline.length() > 0) {
+                textPostDetails.setByLine(byline);
+            } else {
+                allOkay = false;
+                errorMessage = "Please enter a by-line";
+            }
+        } else {
+            textPostDetails.setByLineUsed(false);
+        }
+        if (allOkay) {
+            createPostDialog(textPostDetails);
+        } else {
+            makeSnackbar(errorMessage);
+        }
+    }
+
+    public void createPostDialog(TextPostDetails textPostDetails) {
         AlertDialog.Builder builder = new AlertDialog.Builder(newTextPost.this);
         LayoutInflater layoutInflater = newTextPost.this.getLayoutInflater();
-        builder.setView(layoutInflater.inflate(R.layout.dialog_color_selector, null));
+        builder.setView(layoutInflater.inflate(R.layout.dialog_generated_post, null));
         final AlertDialog alertDialog = builder.create();
         try {
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -417,6 +505,159 @@ public class newTextPost extends AppCompatActivity {
         }
         alertDialog.show();
 
+        //setting views
+        final RelativeLayout mainRelativeLayout = alertDialog.findViewById(R.id.dialog_generated_post_layout);
+        final TextView headingTV = alertDialog.findViewById(R.id.generated_post_heading_tv);
+        final TextView contentTV = alertDialog.findViewById(R.id.generated_post_content_tv);
+        TextView byLineTV = alertDialog.findViewById(R.id.generated_post_byline_tv);
+        LinearLayout headingFontLayout = alertDialog.findViewById(R.id.heading_font_layout);
+        SeekBar headingSeekbar = alertDialog.findViewById(R.id.heading_font_seekbar);
+        SeekBar contentSeekbar = alertDialog.findViewById(R.id.content_font_seekbar);
+        ImageButton closeDialog = alertDialog.findViewById(R.id.dialog_close_post_button);
+        MaterialButton shareButton = alertDialog.findViewById(R.id.dialog_share_button);
+        ImageView postImageView = alertDialog.findViewById(R.id.generated_post_image_view);
+
+        //setting background
+        if (textPostDetails.isBackgroundImageUsed()) {
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), textPostDetails.getBackgroundImageUri());
+                mainRelativeLayout.setBackground(new BitmapDrawable(getResources(), bitmap));
+                postImageView.setBackground(new BitmapDrawable(getResources(), bitmap));
+            } catch (Exception e) {
+                makeSnackbar("Could not load background image.");
+            }
+        } else {
+            mainRelativeLayout.setBackground(new ColorDrawable(textPostDetails.getBackgroundColor()));
+        }
+
+        //setting the heading and bylines visibility
+        if (textPostDetails.isHeadingUsed()) {
+            headingTV.setTextAlignment(getAlignment(textPostDetails.getHeadingAlignment()));
+            headingTV.setText(textPostDetails.getHeading());
+            headingTV.setTextColor(textPostDetails.getTextColor());
+            headingSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    headingTV.setTextSize(progress);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+        } else {
+            headingTV.setVisibility(View.GONE);
+            headingFontLayout.setVisibility(View.GONE);
+        }
+
+        contentTV.setText(textPostDetails.getContent());
+        contentTV.setTextAlignment(getAlignment(textPostDetails.getContentAlignment()));
+        contentTV.setTextColor(textPostDetails.getTextColor());
+        contentSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                contentTV.setTextSize(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        if (textPostDetails.isByLineUsed()) {
+            byLineTV.setText(textPostDetails.getByLine());
+            byLineTV.setTextColor(textPostDetails.getTextColor());
+        } else {
+            byLineTV.setVisibility(View.GONE);
+        }
+
+        closeDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
+
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap finalBitmap = Bitmap.createBitmap(mainRelativeLayout.getWidth(),mainRelativeLayout.getHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(finalBitmap);
+                mainRelativeLayout.draw(canvas);
+                bitmapToShare = finalBitmap;
+                checkPermission();
+            }
+        });
+    }
+
+    public void checkPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            shareBitmap();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 99);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 99:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    shareBitmap();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void shareBitmap(){
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("image/jpeg");
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmapToShare.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream);
+        String path = Environment.getExternalStorageDirectory() + File.separator + "temporary_file.jpg";
+        File f = new File(path);
+        try{
+            f.createNewFile();
+            FileOutputStream fo = new FileOutputStream(f);
+            fo.write(byteArrayOutputStream.toByteArray());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Uri pathu = Uri.fromFile(f);
+        share.putExtra(Intent.EXTRA_STREAM, pathu);
+        share.putExtra(Intent.EXTRA_TEXT, "Shared with #PostX");
+        share.putExtra(Intent.EXTRA_SUBJECT, "Shared with #PostX");
+        startActivity(Intent.createChooser(share, "Share Image"));
+    }
+
+    public int getAlignment(int alignment) {
+        int toReturn = View.TEXT_ALIGNMENT_TEXT_START;
+        switch (alignment) {
+            case 1:
+                toReturn = View.TEXT_ALIGNMENT_TEXT_START;
+                break;
+            case 2:
+                toReturn = View.TEXT_ALIGNMENT_CENTER;
+                break;
+            case 3:
+                toReturn = View.TEXT_ALIGNMENT_TEXT_END;
+                break;
+        }
+        return toReturn;
     }
 
     public Uri getImageUri(Context context, Bitmap inImage) {
@@ -431,14 +672,14 @@ public class newTextPost extends AppCompatActivity {
         goBack((View) mTextColorPicker);
     }
 
-    public void goBack(View view){
-        Intent intent = new Intent(newTextPost.this,MainActivity.class);
-        ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(this, new Pair<>(findViewById(R.id.new_post_root_view),"BackgroundOpen"));
+    public void goBack(View view) {
+        Intent intent = new Intent(newTextPost.this, MainActivity.class);
+        ActivityOptions activityOptions = ActivityOptions.makeSceneTransitionAnimation(this, new Pair<>(findViewById(R.id.new_post_root_view), "BackgroundOpen"));
         startActivity(intent, activityOptions.toBundle());
         finish();
     }
 
-    public void makeSnackbar(String message){
-        Snackbar.make(mTextColorPicker,message,Snackbar.LENGTH_LONG).show();
+    public void makeSnackbar(String message) {
+        Snackbar.make(mTextColorPicker, message, Snackbar.LENGTH_LONG).show();
     }
 }
