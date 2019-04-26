@@ -14,6 +14,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -36,6 +37,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -43,9 +46,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.gson.Gson;
 import com.practikality.postx.models.TextPostDetails;
 
@@ -54,10 +63,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class newTextPost extends AppCompatActivity {
+public class newTextPost extends AppCompatActivity implements RewardedVideoAdListener, AdapterView.OnItemSelectedListener {
 
     public final int PICK_FROM_GALLERY = 2;
 
@@ -73,6 +83,10 @@ public class newTextPost extends AppCompatActivity {
     public Switch bgImageSwitch;
     public Switch headingSwitch;
     public Switch bylineSwitch;
+    public RewardedVideoAd rewardedVideoAd;
+    public ArrayList<String> CustomFonts;
+    public ArrayAdapter<String> mSpinnerAdapter;
+    public Spinner mSpinner;
 
     public int mRedBG;
     public int mGreenBG;
@@ -88,6 +102,7 @@ public class newTextPost extends AppCompatActivity {
     public int headingAlignment;
     public int textAlignment;
     public Bitmap bitmapToShare;
+    public String fontFace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +130,8 @@ public class newTextPost extends AppCompatActivity {
         mBackgroundImagePicker = (ImageButton) findViewById(R.id.text_post_background_image_button);
         mBackgroundColorPicker = findViewById(R.id.text_post_background_color_picker_button);
         mTextColorPicker = findViewById(R.id.text_post_text_color_picker_button);
-
+        mSpinner = findViewById(R.id.text_post_spinner);
+        mSpinner.setOnItemSelectedListener(this);
 
         //heading switch listener
         headingSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -168,6 +184,21 @@ public class newTextPost extends AppCompatActivity {
         //alignment defaults
         headingAlignment = 1;
         textAlignment = 1;
+
+        //fonts
+        CustomFonts = new ArrayList<>();
+        CustomFonts.add("Product Sans");
+        CustomFonts.add("Caviar Dreams");
+        CustomFonts.add("Helvetica Neue");
+        CustomFonts.add("HoneyScript");
+        CustomFonts.add("Oswald");
+        CustomFonts.add("Raleway");
+        CustomFonts.add("Coolvetica");
+        CustomFonts.add("Impact");
+        CustomFonts.add("Stilu");
+        CustomFonts.add("Vag. Repulsive");
+        fontFace = "Product Sans";
+        loadSpinner();
 
         //heading alignment button group management
         headingalignment(1);
@@ -227,6 +258,30 @@ public class newTextPost extends AppCompatActivity {
 
         imageAlreadySet = false;
         makeSnackbar("Saving templates, coming soon!");
+    }
+
+    public void loadSpinner(){
+        mSpinnerAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, CustomFonts){
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                Typeface productsans = Typeface.createFromAsset(getAssets(), "fonts/productsans.ttf");
+                ((TextView) v).setTypeface(productsans);
+                ((TextView) v).setTextSize(18);
+                ((TextView) v).setTextColor(Color.BLACK);
+                return v;
+            }
+
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
+                Typeface productsans = Typeface.createFromAsset(getAssets(), "fonts/productsans.ttf");
+                ((TextView) v).setTypeface(productsans);
+                ((TextView) v).setTextSize(18);
+                ((TextView) v).setTextColor(Color.BLACK);
+                return v;
+            }
+        };
+        mSpinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        mSpinner.setAdapter(mSpinnerAdapter);
     }
 
     public void headingalignment(int buttonClicked) {
@@ -423,9 +478,6 @@ public class newTextPost extends AppCompatActivity {
                     } catch (Exception e) {
                         makeSnackbar("Could not load image.");
                     }
-                    /*TODO: Convert URI to bitmap
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), selectedImage);
-                    text_post_image_background.setImageBitmap(bitmap);*/
                     break;
             }
         } else {
@@ -521,8 +573,7 @@ public class newTextPost extends AppCompatActivity {
         if (textPostDetails.isBackgroundImageUsed()) {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), textPostDetails.getBackgroundImageUri());
-                mainRelativeLayout.setBackground(new BitmapDrawable(getResources(), bitmap));
-                postImageView.setBackground(new BitmapDrawable(getResources(), bitmap));
+                postImageView.setImageBitmap(bitmap);
             } catch (Exception e) {
                 makeSnackbar("Could not load background image.");
             }
@@ -535,6 +586,7 @@ public class newTextPost extends AppCompatActivity {
             headingTV.setTextAlignment(getAlignment(textPostDetails.getHeadingAlignment()));
             headingTV.setText(textPostDetails.getHeading());
             headingTV.setTextColor(textPostDetails.getTextColor());
+            headingTV.setTypeface(getFontApplied(fontFace));
             headingSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -559,6 +611,7 @@ public class newTextPost extends AppCompatActivity {
         contentTV.setText(textPostDetails.getContent());
         contentTV.setTextAlignment(getAlignment(textPostDetails.getContentAlignment()));
         contentTV.setTextColor(textPostDetails.getTextColor());
+        contentTV.setTypeface(getFontApplied(fontFace));
         contentSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -597,6 +650,7 @@ public class newTextPost extends AppCompatActivity {
                 Canvas canvas = new Canvas(finalBitmap);
                 mainRelativeLayout.draw(canvas);
                 bitmapToShare = finalBitmap;
+                makeSnackbar("Generating...");
                 checkPermission();
             }
         });
@@ -624,6 +678,13 @@ public class newTextPost extends AppCompatActivity {
     }
 
     public void shareBitmap(){
+        rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+        rewardedVideoAd.setRewardedVideoAdListener(this);
+        //rewardedVideoAd.loadAd("ca-app-pub-3940256099942544/5224354917", new AdRequest.Builder().build());
+        rewardedVideoAd.loadAd("ca-app-pub-2979566945991409/5941446144", new AdRequest.Builder().build());
+    }
+
+    public void finallyShareBitmap(){
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("image/jpeg");
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -681,5 +742,86 @@ public class newTextPost extends AppCompatActivity {
 
     public void makeSnackbar(String message) {
         Snackbar.make(mTextColorPicker, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRewardedVideoAdLoaded() {
+        rewardedVideoAd.show();
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
+
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {
+        makeSnackbar("Video closed in between!");
+    }
+
+    @Override
+    public void onRewarded(RewardItem rewardItem) {
+        finallyShareBitmap();
+    }
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+        makeSnackbar("Application closed in between!");
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int i) {
+        makeSnackbar("Video failed to load!");
+        finallyShareBitmap();
+    }
+
+    @Override
+    public void onRewardedVideoCompleted() {
+        makeSnackbar("Video watched!");
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        fontFace = CustomFonts.get(position);
+        ((TextView) findViewById(R.id.new_post_title)).setTypeface(getFontApplied(fontFace));
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    public Typeface getFontApplied(String fontName){
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/productsans.ttf");
+
+        if(fontName.equals("Caviar Dreams")){
+            System.out.println("caviar");
+            typeface = Typeface.createFromAsset(getAssets(), "fonts/caviardreams.ttf");
+        } else if(fontName.equals("Helvetica Neue")){
+            System.out.println("hell");
+            typeface = Typeface.createFromAsset(getAssets(), "fonts/helveticaneue.ttf");
+        } else if(fontName.equals("HoneyScript")){
+            typeface = Typeface.createFromAsset(getAssets(), "fonts/honeyscript.ttf");
+        } else if(fontName.equals("Oswald")){
+            typeface = Typeface.createFromAsset(getAssets(), "fonts/oswald.ttf");
+        } else if(fontName.equals("Raleway")){
+            typeface = Typeface.createFromAsset(getAssets(), "fonts/raleway.ttf");
+        } else if(fontName.equals("Coolvetica")){
+            System.out.println("cool");
+            typeface = Typeface.createFromAsset(getAssets(), "fonts/coolvetica.ttf");
+        } else if(fontName.equals("Impact")){
+            typeface = Typeface.createFromAsset(getAssets(), "fonts/impact.ttf");
+        } else if(fontName.equals("Stilu")){
+            typeface = Typeface.createFromAsset(getAssets(), "fonts/stilu.otf");
+        } else if(fontName.equals("Vag. Repulsive")){
+            typeface = Typeface.createFromAsset(getAssets(), "fonts/vaguelyrepulsive.ttf");
+        }
+
+        return typeface;
     }
 }

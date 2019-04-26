@@ -8,6 +8,8 @@ import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.google.android.gms.ads.MobileAds;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -16,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        MobileAds.initialize(this, "ca-app-pub-2979566945991409~2513692248");
+        //MobileAds.initialize(this, "ca-app-pub-3940256099942544/5224354917");
         startActivity(new Intent(MainActivity.this,newTextPost.class));
     }
 

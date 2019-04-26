@@ -13,6 +13,9 @@
         android:roundIcon="@drawable/postx_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2979566945991409~2513692248"/>
         <activity android:name=".newTextPost"
             android:screenOrientation="portrait"/>
         <activity android:name=".MainActivity"

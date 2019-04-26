@@ -16,7 +16,7 @@
         app:cardUseCompatPadding="true">
 
         <LinearLayout
-            android:layout_width="330dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -42,12 +42,12 @@
                 android:orientation="vertical">
                 <RelativeLayout
                     android:id="@+id/dialog_generated_post_layout"
-                    android:layout_width="330dp"
-                    android:layout_height="330dp"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
                     android:background="@color/greenmat">
                     <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="300dp"
+                        android:layout_height="300dp"
                         android:id="@+id/generated_post_image_view"
                         android:scaleType="centerCrop"/>
                     <TextView
